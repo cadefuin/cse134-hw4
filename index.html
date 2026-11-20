@@ -9,16 +9,18 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Cass Adefuin</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="global.css">
+    <meta name="color-scheme" content="light dark">
     <script>
-        class CustomElement2 extends HTMLElement {
-            connectedCallback() {
-            console.log("Hello World!");
-            }
+    try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') {
+        document.documentElement.dataset.theme = theme;
         }
-
-        customElements.define("custom-element-2", CustomElement2);
+    } catch { /* no storage: follow the system */ }
     </script>
+    <link rel="stylesheet" href="global.css">
+    <script src="form.js" defer></script>
+    <script src="theme.js" defer></script>
 </head>
 
 <body>
@@ -66,16 +68,30 @@
             <fieldset>
                 <legend>Send me a message:</legend>
                 <label for="name">Name:</label>
-                <input type="text" name="name" autocomplete="name" required minlength="1" maxlength="100">
+                <input type="text" name="name" autocomplete="name" required minlength="1" maxlength="100" aria-describedby="name-error">
+                <p id="name-error" class="error" aria-live="polite"></p>
                 <br>
                 <label for="email">Email:</label>
-                <input type="email" name="email" autocomplete="email" required>
+                <input type="email" name="email" autocomplete="email" required aria-describedby="email-error">
+                <p id="email-error" class="error" aria-live="polite"></p>
                 <br>
                 <label for="comments">Comment:</label>
-                <textarea name="comments" required minlength="10" maxlength="1000"></textarea>
+                <textarea name="comments" required minlength="10" maxlength="1000" aria-describedby="comments-error"></textarea>
+                <p id="comments-error" class="error" aria-live="polite"></p>
+                <p id="comments-info" class="info"></p>
                 <br>
                 <input name="possible_bot" value="true" hidden>
+                <input name="form-errors" hidden>
                 <button type="submit">Submit</button>
+            </fieldset>
+        </form>
+
+        <form>
+            <fieldset data-theme-switch hidden>
+                <legend>Theme</legend>
+                <label><input type="radio" name="theme" value="system" checked> System</label>
+                <label><input type="radio" name="theme" value="light"> Light</label>
+                <label><input type="radio" name="theme" value="dark"> Dark</label>
             </fieldset>
         </form>
     </footer>
